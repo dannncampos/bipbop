@@ -2,8 +2,12 @@
 
 require "vendor/autoload.php";
 
-$pushesGenerator = new \BIPBOP\Useful\PushesGenerator;
+$tribunal = 'TJSP';
+$consulta = 'ConsultaPorNumeroOAB';
+$numeroOab = '368336-SP';
+
+$pushesGenerator = new \BIPBOP\Useful\PushesGenerator($tribunal, $consulta, $numeroOab);
 
 echo "<pre>";
-print_r($pushesGenerator->showPushes());
+print_r($pushesGenerator->createPushes());
 echo "</pre>";
