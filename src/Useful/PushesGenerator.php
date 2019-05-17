@@ -17,8 +17,8 @@ class PushesGenerator {
 		$response = $this->searchOab->parseData($xpath);
 		return $response;
 	}
-	public function createPushes(){
-		$pushes = $this->pushesCreator->createPush($this->showProcess());
+	public function createPushes($amount, $label){
+		$pushes = $this->pushesCreator->createPush($this->showProcess(), $amount, $label);
 		return $pushes;
 	}
 }
