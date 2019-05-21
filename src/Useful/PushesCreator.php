@@ -16,7 +16,7 @@ class PushesCreator
 		$this->pushjuristek = new PushJuristek($this->webservice);
 	}
 	public function createPush($processes, $limit = 5, $label = NULL)
-	{
+	{	
 		$limit = --$limit;
 		if ($limit > count($processes)) {
 			$limit = count($processes);
@@ -26,7 +26,7 @@ class PushesCreator
 			$tribunal = $process['tribunal_nome'];
 			$instancia = $process['tribunal_consulta'];
 			$processnumber = $process['numero_processo'];
-			$dompush = $this->pushjuristek->create($this->createLabel($label, $instancia, $processnumber), "http://api.webhookinbox.com/i/dv68NNUw/in/", "SELECT FROM 'JURISTEK'.'INFO'", ["data" => "SELECT FROM '$tribunal'.'$instancia' WHERE 'numero_processo' = '$processnumber'"], false);
+			$dompush = $this->pushjuristek->create($this->createLabel($label, $instancia, $processnumber), "http://api.webhookinbox.com/i/dv68NNUw/in/", "SELECT FROM '$tribunal'.'$instancia'", ["numero_processo" => "$processnumber"], false);
 			$process['id'] = $dompush;
 			$processes[$key] = $process;
 			if ($key == $limit) {
