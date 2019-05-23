@@ -6,7 +6,7 @@ use BIPBOP\Useful\SearchOab;
 use BIPBOP\Useful\PushesCreator;
 use BIPBOP\Client\Exception as MyException;
 
-class PushesGenerator 
+class PushesGeneratorByOab 
 {
 	private $searchOab;
 	private $pushesCreator;

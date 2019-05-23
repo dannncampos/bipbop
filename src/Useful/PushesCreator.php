@@ -4,6 +4,7 @@ namespace BIPBOP\Useful;
 
 use BIPBOP\Client\WebService;
 use BIPBOP\Client\PushJuristek;
+use BIPBOP\Client\Exception as MyException;
 
 class PushesCreator
 {
@@ -23,14 +24,33 @@ class PushesCreator
 		}
 		foreach ($processes as $key => $process) {
 			sleep(1);
-			$tribunal = $process['tribunal_nome'];
-			$instancia = $process['tribunal_consulta'];
 			$processnumber = $process['numero_processo'];
-			$dompush = $this->pushjuristek->create($this->createLabel($label, $instancia, $processnumber), "http://api.webhookinbox.com/i/dv68NNUw/in/", "SELECT FROM '$tribunal'.'$instancia'", ["numero_processo" => "$processnumber"], false);
-			$process['id'] = $dompush;
-			$processes[$key] = $process;
-			if ($key == $limit) {
-				break;
+			if (isset($process['tribunal_nome']) && isset($process['tribunal_consulta'])) {
+				$tribunal = $process['tribunal_nome'];
+				$instancia = $process['tribunal_consulta'];
+				try {
+					$dompush = $this->pushjuristek->create($this->createLabel($label, $instancia, $processnumber), "http://api.webhookinbox.com/i/dv68NNUw/in/", "SELECT FROM '$tribunal'.'$instancia'", ["numero_processo" => "$processnumber"], false);
+					$process['id'] = $dompush;
+					$processes[$key] = $process;
+				} catch (Exception $e) {
+					continue;
+				}
+				if ($key == $limit) {
+					break;
+				}
+			} else {
+				try {
+					$dompush = $this->pushjuristek->create($this->createLabel($label, 'CNJ', $processnumber), "http://api.webhookinbox.com/i/dv68NNUw/in/", "SELECT FROM 'CNJ'.'PROCESSO'", [
+				"PROCESSO" => "$processnumber"
+				], false);
+					$process['id'] = $dompush;
+					$processes[$key] = $process;
+				} catch (Exception $e) {
+					continue;
+				}
+				if ($key == $limit) {
+					break;
+				}
 			}
 		}
 		return $processes;
